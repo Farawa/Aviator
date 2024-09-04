@@ -44,6 +44,11 @@ public class UIController : MonoBehaviour
         }
     }
 
+    internal void OpenSettings()
+    {
+        settings.SetActive(true);
+    }
+
     private void ShowMenu()
     {
         HideAll();
