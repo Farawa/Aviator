@@ -46,8 +46,9 @@ public class UIController : MonoBehaviour
 
     private void ShowMenu()
     {
-        menuController.gameObject.SetActive(true);
         HideAll();
+        menuController.gameObject.SetActive(true);
+        MusicController.Instance.StartMenuMusic();
     }
 
     internal void SetTermsGained()
@@ -68,6 +69,11 @@ public class UIController : MonoBehaviour
         privacyWindow.gameObject.SetActive(true);
     }
 
+    public void ShowGame()
+    {
+        MusicController.Instance.StartGameMusic();
+    }
+
     private void HideAll()
     {
         plane.SetActive(false);
@@ -75,6 +81,11 @@ public class UIController : MonoBehaviour
         privacyWindow.gameObject.SetActive(false);
         menuController.ResetMenu();
         menuController.gameObject.SetActive(false);
+        settings.SetActive(false);
+    }
+
+    public void HideSettings()
+    {
         settings.SetActive(false);
     }
 }

@@ -12,12 +12,12 @@ public static class PlayerPrefsHelper
         SetBool("isWelcomeBonusGain", true);
     }
 
-    private static bool GetBool(string key)
+    public static bool GetBool(string key, bool defaultValue = false)
     {
-        return PlayerPrefs.GetInt(key) % 2 == 0 ? true : false;
+        return PlayerPrefs.GetInt(key, defaultValue ? 1 : 0) % 2 == 0 ? true : false;
     }
 
-    private static void SetBool(string key, bool value)
+    public static void SetBool(string key, bool value)
     {
         PlayerPrefs.SetInt(key, value ? 1 : 0);
     }

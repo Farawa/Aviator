@@ -4,44 +4,69 @@ using UnityEngine;
 
 public class MusicController : MonoBehaviour
 {
+    public static MusicController Instance = null;
+
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip menuMusic;
     [SerializeField] private AudioClip gameMusic;
-    [SerializeField] private AudioClip shootSound;
-    
+    [SerializeField] private GameObject shootPrefab;
+    private static readonly string soundsKey = "isSoundsEnabled";
+    private static readonly string musicKey = "isMusicEnabled";
+
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Debug.LogError("MTOI");
+    }
+
+    private void Start()
+    {
+        SetMusicVolume(IsMusicEnabled());
+    }
 
     public void StartMenuMusic()
     {
+        audioSource.clip = menuMusic;
+        audioSource.Play();
+    }
 
+    public void StartGameMusic()
+    {
+        audioSource.clip = gameMusic;
+        audioSource.Play();
     }
 
     public void StopMusic()
     {
-
+        audioSource.Stop();
     }
 
-    public void TurnVolumeDown()
+    public void SetMusicVolume(bool isEnabled)
     {
-
+        PlayerPrefsHelper.SetBool(musicKey, isEnabled);
+        audioSource.mute = !isEnabled;
     }
 
-    public void TurnVolumeUp()
+    public static void SetSoundsVolume(bool isEnabled)
     {
+        PlayerPrefsHelper.SetBool(soundsKey, isEnabled);
+    }
 
+    public static bool IsMusicEnabled()
+    {
+        return PlayerPrefsHelper.GetBool(musicKey, true);
+    }
+
+    public static bool IsSoundsEnabled()
+    {
+        return PlayerPrefsHelper.GetBool(soundsKey, true);
     }
 
     public void PlayShoot()
     {
-
-    }
-
-    public void SetMusicActive(bool isActive)
-    {
-
-    }
-
-    public void SetSoundsActive(bool isActive)
-    {
-
+        if (!IsSoundsEnabled()) return;
+        Instantiate(shootPrefab, transform);
     }
 }
