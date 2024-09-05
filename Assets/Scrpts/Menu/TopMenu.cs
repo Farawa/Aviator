@@ -9,8 +9,9 @@ public class TopMenu : MonoBehaviour
 
     private void Start()
     {
-        PointsController.OnUpdatePoints += (int value) => { pointsCounter.text = value.ToString(); };
-        pointsCounter.text = PointsController.PointsEarned.ToString();
+        ProgressHolder.OnUpdatePoints += (int value) => { pointsCounter.text = value.ToString(); };
+        pointsCounter.text = ProgressHolder.PointsEarned.ToString();
+        homeButton.onClick.AddListener(() => MenuController.Instance.ResetMenu());
     }
 
     public void ShowHomeButton()
