@@ -6,9 +6,15 @@ using UnityEngine;
 public class DelayDestroyer : MonoBehaviour
 {
     [SerializeField] private float secondsForDestroy = 1f;
-    private async void Start()
+
+    private void Start()
     {
-        await Task.Delay(Mathf.RoundToInt(secondsForDestroy * 1000));
+        StartCoroutine(DestroyCoro());
+    }
+
+    private IEnumerator DestroyCoro()
+    {
+        yield return new WaitForSeconds(secondsForDestroy);
         Destroy(gameObject);
     }
 }

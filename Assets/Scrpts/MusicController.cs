@@ -45,23 +45,29 @@ public class MusicController : MonoBehaviour
 
     public void SetMusicVolume(bool isEnabled)
     {
+        Debug.Log($"music turned {isEnabled}");
         PlayerPrefsHelper.SetBool(musicKey, isEnabled);
         audioSource.mute = !isEnabled;
     }
 
     public static void SetSoundsVolume(bool isEnabled)
     {
+        Debug.Log($"sounds turned {isEnabled}");
         PlayerPrefsHelper.SetBool(soundsKey, isEnabled);
     }
 
     public static bool IsMusicEnabled()
     {
-        return PlayerPrefsHelper.GetBool(musicKey, true);
+        var isMusicEnable = PlayerPrefsHelper.GetBool(musicKey, true);
+        Debug.Log($"music enabled is {isMusicEnable}");
+        return isMusicEnable;
     }
 
     public static bool IsSoundsEnabled()
     {
-        return PlayerPrefsHelper.GetBool(soundsKey, true);
+        var soundsEnable = PlayerPrefsHelper.GetBool(soundsKey, true);
+        Debug.Log($"sounds enabled is {soundsEnable}");
+        return soundsEnable;
     }
 
     public void PlayShoot()

@@ -15,6 +15,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private PrivacyWindow privacyWindow;
     [SerializeField] private MenuController menuController;
     [SerializeField] private GameObject settings;
+    [SerializeField] private GameManager gameManager;
 
     private void Awake()
     {
@@ -26,6 +27,7 @@ public class UIController : MonoBehaviour
 
     private async void Start()
     {
+        Application.targetFrameRate = 60;
         BGSwitcher.SetBG(BGType.preview);
         HideAll();
         plane.SetActive(true);
@@ -35,6 +37,7 @@ public class UIController : MonoBehaviour
         BGSwitcher.SetBG(BGType.menu);
         if (!PlayerPrefsHelper.IsWelcomBonusGain())
         {
+            HideAll();
             welcomeBonusWindow.gameObject.SetActive(true);
             welcomeBonusWindow.RandomizeBunus();
         }
@@ -52,6 +55,7 @@ public class UIController : MonoBehaviour
     private void ShowMenu()
     {
         HideAll();
+        BGSwitcher.SetBG(BGType.menu);
         menuController.gameObject.SetActive(true);
         MusicController.Instance.StartMenuMusic();
     }
@@ -71,11 +75,16 @@ public class UIController : MonoBehaviour
 
     private void ShowTerms()
     {
+        HideAll();
         privacyWindow.gameObject.SetActive(true);
     }
 
     public void ShowGame()
     {
+        HideAll();
+        BGSwitcher.SetBG(BGType.game);
+        gameManager.gameObject.SetActive(true);
+        gameManager.StartGame();
         MusicController.Instance.StartGameMusic();
     }
 
@@ -87,6 +96,7 @@ public class UIController : MonoBehaviour
         menuController.ResetMenu();
         menuController.gameObject.SetActive(false);
         settings.SetActive(false);
+        gameManager.gameObject.SetActive(false);
     }
 
     public void HideSettings()

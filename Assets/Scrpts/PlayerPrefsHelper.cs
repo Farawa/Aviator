@@ -4,7 +4,7 @@ public static class PlayerPrefsHelper
 {
     public static bool IsWelcomBonusGain()
     {
-        return GetBool("isWelcomeBonusGain");
+        return GetBool("isWelcomeBonusGain",false);
     }
 
     public static void SetWelcomBonusGain()
@@ -15,7 +15,7 @@ public static class PlayerPrefsHelper
 
     public static bool GetBool(string key, bool defaultValue = false)
     {
-        return PlayerPrefs.GetInt(key, defaultValue ? 1 : 0) % 2 == 0 ? true : false;
+        return PlayerPrefs.GetInt(key, defaultValue ? 1 : 0) % 2 == 0 ? false : true;
     }
 
     public static void SetBool(string key, bool value)

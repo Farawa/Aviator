@@ -16,6 +16,7 @@ public class PrivacyWindow : MonoBehaviour
         privacy.isOn = false;
         terms.isOn = false;
         privacy.onValueChanged.AddListener(CheckToggles);
+        terms.onValueChanged.AddListener(CheckToggles);
         continueButton.onClick.AddListener(PrivacyContinue);
     }
 

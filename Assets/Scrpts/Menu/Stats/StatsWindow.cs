@@ -16,7 +16,7 @@ public class StatsWindow : MonoBehaviour
     {
         for (int i = content.childCount - 1; i >= 0; i--)
         {
-            Destroy(content.GetChild(i));
+            Destroy(content.GetChild(i).gameObject);
         }
         SpawnStats();
     }
