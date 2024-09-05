@@ -58,6 +58,7 @@ public class Bullet : MonoBehaviour
                 break;
             }
         }
+        if (targetCollider == null) return;
         var hitableObject = targetCollider.gameObject.GetComponent<HitableObject>();
         if (!hitableObject) return;
         StopAllCoroutines();

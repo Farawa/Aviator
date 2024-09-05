@@ -7,12 +7,21 @@ public class EnemyPlane : MonoBehaviour
     [SerializeField] private float moveSpeed = 5;
     [SerializeField] private Bullet bulletPrefab;
     [SerializeField] private float shootDelay = 0.2f;
+    [SerializeField] private float destroyDelay = 15f;
     private float lastShoot = 0;
 
     private void FixedUpdate()
     {
         MoveDown();
         Shoot();
+        StartCoroutine(SelfDistroyCoro());
+    }
+
+    private IEnumerator SelfDistroyCoro()
+    {
+        yield return new WaitForSeconds(destroyDelay);
+        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 
     private void Shoot()

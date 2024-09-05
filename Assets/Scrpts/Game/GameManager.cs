@@ -19,7 +19,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float playerSideSpeed = 20f;
     [SerializeField] private float shootDelay = 0.2f;
     private float lastShoot = 0;
-
+    [Space]
+    [SerializeField] private RectTransform enemyPlace;
+    [SerializeField] private RectTransform enemyPrefab;
+    [SerializeField] private float delaySpawnEnemy = 5;
+    private bool isGameInProcess = true;
     private void Awake()
     {
         if (!instance) instance = this;
@@ -31,15 +35,13 @@ public class GameManager : MonoBehaviour
         leftButton.SetAction(MoveLeft);
         leftButton.SetAction(MoveRight);
         fireButton.SetAction(Fire);
-        playerPlane = Instantiate(playerPlanePrefab, playerPlanePlace);
-        playerPlane.anchoredPosition = Vector2.zero;
     }
 
     private void Fire()
     {
         if (lastShoot + shootDelay > Time.time) return;
         lastShoot = Time.time;
-        var bullet = Instantiate(bulletPrefab, transform);
+        var bullet = Instantiate(bulletPrefab, playerPlanePlace);
         bullet.transform.position = playerPlane.transform.position;
         (bullet.transform as RectTransform).anchoredPosition += playerPlane.sizeDelta.y / 2 * Vector2.up;
         bullet.IsShootPlayer = true;
@@ -78,11 +80,61 @@ public class GameManager : MonoBehaviour
     {
         var currentLevel = ProgressHolder.SelectedLevel;
         var timerTime = 20 + currentLevel;
+        DestroyAllPlanes();
+        SpawnPlayer();
         SetTimerValue(timerTime);
         StartCoroutine(TimerCoroutine(timerTime));
         fireButton.SetAction(Fire);
         leftButton.SetAction(MoveLeft);
         rightButton.SetAction(MoveRight);
+        StartCoroutine(SpawnEnemiesCoro());
+    }
+
+    private void SpawnPlayer()
+    {
+        playerPlane = Instantiate(playerPlanePrefab, playerPlanePlace);
+        playerPlane.anchoredPosition = Vector2.zero;
+    }
+
+    private void DestroyAllPlanes()
+    {
+        for(int i = enemyPlace.childCount - 1; i >= 0; i--)
+        {
+            Destroy(enemyPlace.GetChild(i).gameObject);
+        }
+        for(int i = playerPlanePlace.childCount - 1; i >= 0; i--)
+        {
+            Destroy(playerPlanePlace.GetChild(i).gameObject);
+        }
+    }
+
+    private IEnumerator SpawnEnemiesCoro()
+    {
+        while (true)
+        {
+            SpawnEnemy();
+            yield return new WaitForSeconds(delaySpawnEnemy);
+        }
+    }
+
+    public void PauseGame()
+    {
+        Time.timeScale = 0;
+    }
+
+    public void ResumeGame()
+    {
+        Time.timeScale = 1;
+    }
+
+    private void SpawnEnemy()
+    {
+        var placeForEnemy = enemyPlace.anchoredPosition;
+        var placeWidth = enemyPlace.rect.width;
+        var enemyHalfWidth = enemyPrefab.rect.width / 2;
+        placeForEnemy.x = UnityEngine.Random.Range(-placeWidth/2 + enemyHalfWidth, placeWidth/2 - enemyHalfWidth);
+        var enemy = Instantiate(enemyPrefab, enemyPlace);
+        enemy.anchoredPosition = placeForEnemy;
     }
 
     private IEnumerator TimerCoroutine(float levelTime)
@@ -110,6 +162,7 @@ public class GameManager : MonoBehaviour
     public void EndGame(bool isWin)
     {
         StopAllCoroutines();
+        DestroyAllPlanes();
         MusicController.Instance.StopMusic();
         if (isWin)
         {
