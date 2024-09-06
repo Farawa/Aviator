@@ -26,7 +26,7 @@ public class StatsWindow : MonoBehaviour
         var data = StatsHolder.GetStatDatas();
         for (int i = 0; i < data.Count; i++)
         {
-            Instantiate(elementPrefab).Initiate(data[i].Date, data[i].Points.ToString());
+            Instantiate(elementPrefab,content).Initiate(data[i].Date, data[i].Points.ToString());
         }
     }
 }

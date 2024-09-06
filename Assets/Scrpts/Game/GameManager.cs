@@ -23,7 +23,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private RectTransform enemyPlace;
     [SerializeField] private RectTransform enemyPrefab;
     [SerializeField] private float delaySpawnEnemy = 5;
-    private bool isGameInProcess = true;
+    [Space]
+    [SerializeField] private GameObject pauseWindow;
+    [SerializeField] private FinalWindow winWindow;
+    [SerializeField] private FinalWindow loseWindow;
+    [Space]
+    [SerializeField] private int pointsPerShot = 25;
+    private int currentPoints = 0;
+
     private void Awake()
     {
         if (!instance) instance = this;
@@ -35,6 +42,11 @@ public class GameManager : MonoBehaviour
         leftButton.SetAction(MoveLeft);
         leftButton.SetAction(MoveRight);
         fireButton.SetAction(Fire);
+    }
+
+    public void AddPoints()
+    {
+        currentPoints += pointsPerShot;
     }
 
     private void Fire()
@@ -50,12 +62,14 @@ public class GameManager : MonoBehaviour
 
     private void MoveRight()
     {
+        if (!playerPlane) return;
         playerPlane.anchoredPosition += Vector2.right * playerSideSpeed;
         ClampPlayer();
     }
 
     private void MoveLeft()
     {
+        if (!playerPlane) return;
         playerPlane.anchoredPosition += Vector2.left * playerSideSpeed;
         ClampPlayer();
     }
@@ -79,8 +93,9 @@ public class GameManager : MonoBehaviour
     internal void StartGame()
     {
         var currentLevel = ProgressHolder.SelectedLevel;
-        var timerTime = 20 + currentLevel;
-        DestroyAllPlanes();
+        var timerTime = 20 + currentLevel * 2;
+        ResetGame(false);
+        MusicController.Instance.StartGameMusic();
         SpawnPlayer();
         SetTimerValue(timerTime);
         StartCoroutine(TimerCoroutine(timerTime));
@@ -98,11 +113,11 @@ public class GameManager : MonoBehaviour
 
     private void DestroyAllPlanes()
     {
-        for(int i = enemyPlace.childCount - 1; i >= 0; i--)
+        for (int i = enemyPlace.childCount - 1; i >= 0; i--)
         {
             Destroy(enemyPlace.GetChild(i).gameObject);
         }
-        for(int i = playerPlanePlace.childCount - 1; i >= 0; i--)
+        for (int i = playerPlanePlace.childCount - 1; i >= 0; i--)
         {
             Destroy(playerPlanePlace.GetChild(i).gameObject);
         }
@@ -120,11 +135,13 @@ public class GameManager : MonoBehaviour
     public void PauseGame()
     {
         Time.timeScale = 0;
+        pauseWindow.SetActive(true);
     }
 
     public void ResumeGame()
     {
         Time.timeScale = 1;
+        pauseWindow.SetActive(false);
     }
 
     private void SpawnEnemy()
@@ -132,7 +149,7 @@ public class GameManager : MonoBehaviour
         var placeForEnemy = enemyPlace.anchoredPosition;
         var placeWidth = enemyPlace.rect.width;
         var enemyHalfWidth = enemyPrefab.rect.width / 2;
-        placeForEnemy.x = UnityEngine.Random.Range(-placeWidth/2 + enemyHalfWidth, placeWidth/2 - enemyHalfWidth);
+        placeForEnemy.x = UnityEngine.Random.Range(-placeWidth / 2 + enemyHalfWidth, placeWidth / 2 - enemyHalfWidth);
         var enemy = Instantiate(enemyPrefab, enemyPlace);
         enemy.anchoredPosition = placeForEnemy;
     }
@@ -159,6 +176,16 @@ public class GameManager : MonoBehaviour
         //Debug.Log($"times left {timeLeft}, rounded {timeLeftInt}, text {timer.text}");
     }
 
+    public void ResetGame(bool isWithStart = false)
+    {
+        ResumeGame();
+        DestroyAllPlanes();
+        StopAllCoroutines();
+        winWindow.gameObject.SetActive(false);
+        loseWindow.gameObject.SetActive(false);
+        if (isWithStart) StartGame();
+    }
+
     public void EndGame(bool isWin)
     {
         StopAllCoroutines();
@@ -166,11 +193,19 @@ public class GameManager : MonoBehaviour
         MusicController.Instance.StopMusic();
         if (isWin)
         {
+            winWindow.gameObject.SetActive(true);
+            winWindow.SetScrore(currentPoints);
+            ProgressHolder.AddPoints(currentPoints);
+            if (ProgressHolder.MaxLevelEarned == ProgressHolder.SelectedLevel)
+                ProgressHolder.AddMaxLevel();
+            StatsHolder.AddStatData(currentPoints);
 
         }
         else
         {
-
+            loseWindow.gameObject.SetActive(true);
+            loseWindow.SetScrore(0);
+            StatsHolder.AddStatData(0);
         }
     }
 }

@@ -52,7 +52,7 @@ public class UIController : MonoBehaviour
         settings.SetActive(true);
     }
 
-    private void ShowMenu()
+    public void ShowMenu()
     {
         HideAll();
         BGSwitcher.SetBG(BGType.menu);

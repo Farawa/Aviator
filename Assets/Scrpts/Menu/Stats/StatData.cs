@@ -3,6 +3,12 @@
 public class StatData
 {
     private static readonly string[] monthNames = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+    
+    public StatData()
+    {
+
+    }
+    
     public StatData(DateTime date, int points)
     {
         Date = $"{date.Day} {monthNames[date.Month]}";

@@ -30,25 +30,31 @@ public class SelectWindowController : MonoBehaviour
     {
         currentSelectedLevel = selectedLevel;
         ProgressHolder.SelectedLevel = currentSelectedLevel;
+        numberImage.sprite = levelNumber[currentSelectedLevel-1];
         CheckArrowsEnabled();
+        Debug.Log($"selected {currentSelectedLevel}");
     }
 
     private void SelectPreviewLevel()
     {
+        currentSelectedLevel++;
         ProgressHolder.SelectedLevel = currentSelectedLevel;
+        SelectLevel(currentSelectedLevel);
         CheckArrowsEnabled();
     }
 
     private void SelectNextLevel()
     {
+        currentSelectedLevel--;
         ProgressHolder.SelectedLevel = currentSelectedLevel;
+        SelectLevel(currentSelectedLevel);
         CheckArrowsEnabled();
     }
 
     private void CheckArrowsEnabled()
     {
-        arrowLeft.enabled = currentSelectedLevel == 1 ? false : true;
-        arrowRight.enabled = currentSelectedLevel == ProgressHolder.MaxLevel ||
+        arrowLeft.interactable = currentSelectedLevel == 1 ? false : true;
+        arrowRight.interactable = currentSelectedLevel == ProgressHolder.MaxLevel ||
             currentSelectedLevel == ProgressHolder.MaxLevelEarned ? false : true;
     }
 }

@@ -4,11 +4,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
-public class CloseSettingsButton : MonoBehaviour
+public class PauseButton : MonoBehaviour
 {
     private void Start()
     {
-        GetComponent<Button>().onClick.AddListener(() => UIController.Instance.HideSettings());
-        Time.timeScale = 1;
+        GetComponent<Button>().onClick.AddListener(() => GameManager.instance.PauseGame());
     }
 }

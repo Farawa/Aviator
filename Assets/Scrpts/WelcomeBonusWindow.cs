@@ -11,7 +11,7 @@ public class WelcomeBonusWindow : MonoBehaviour
     [SerializeField] private Button getButton;
     [SerializeField] private TextMeshProUGUI topLabel;
     private string yourBonusText = "Your bonus";
-
+    private int bonus;
     public void RandomizeBunus()
     {
         getButton.gameObject.SetActive(false);
@@ -21,6 +21,7 @@ public class WelcomeBonusWindow : MonoBehaviour
 
     private void GetBonus()
     {
+        ProgressHolder.AddPoints(bonus);
         UIController.Instance.SetBonusGained();
     }
 
@@ -34,6 +35,7 @@ public class WelcomeBonusWindow : MonoBehaviour
             currentIndex++;
             if (currentIndex > bonusNumbers.Count - 1) currentIndex = 0;
             bonusImage.sprite = bonusNumbers[currentIndex];
+            bonus = (currentIndex + 1) * 100;
             yield return new WaitForSeconds(0.1f);
         }
         ShowYourBunus();

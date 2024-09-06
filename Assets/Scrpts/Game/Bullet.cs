@@ -61,6 +61,7 @@ public class Bullet : MonoBehaviour
         if (targetCollider == null) return;
         var hitableObject = targetCollider.gameObject.GetComponent<HitableObject>();
         if (!hitableObject) return;
+        if (hitableObject.hitableType == HitableObjectType.enemy) GameManager.instance.AddPoints();
         StopAllCoroutines();
         Debug.Log($"collided {targetCollider.name}");
         hitableObject.ReduceHealth(damage);

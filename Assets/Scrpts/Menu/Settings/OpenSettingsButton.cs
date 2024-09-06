@@ -9,5 +9,6 @@ public class OpenSettingsButton : MonoBehaviour
     private void Start()
     {
         GetComponent<Button>().onClick.AddListener(() => UIController.Instance.OpenSettings());
+        Time.timeScale = 0;
     }
 }
